@@ -3,6 +3,8 @@ import express from 'express';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
 import { pool } from './db';
 import authRouter from './routes/auth';
 import expensesRouter from './routes/expenses';
@@ -18,7 +20,25 @@ app.use(express.json());
 // CORS – allow the web dev server with credentials
 app.use(
   cors({
-    origin: process.env.WEB_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (process.env.NODE_ENV === 'production') {
+        callback(null, true);
+        return;
+      }
+
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+
+      const allowedOrigin = process.env.WEB_URL || 'http://localhost:5173';
+      if (origin === allowedOrigin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   })
 );
@@ -55,8 +75,23 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 TNDiary API listening on http://localhost:${PORT}`);
+if (process.env.NODE_ENV === 'production') {
+  const webDistPath = path.resolve(__dirname, '../../web/dist');
+  if (fs.existsSync(webDistPath)) {
+    app.use(express.static(webDistPath));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith('/api') || req.path.startsWith('/auth') || req.path === '/health') {
+        next();
+        return;
+      }
+
+      res.sendFile(path.join(webDistPath, 'index.html'));
+    });
+  }
+}
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 TNDiary API listening on http://0.0.0.0:${PORT}`);
 });
 
 export default app;

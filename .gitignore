@@ -6,6 +6,8 @@ apps/*/node_modules/
 # Build outputs
 dist/
 apps/*/dist/
+.vite/
+apps/*/.vite/
 
 # Environment files (never commit real secrets)
 .env
