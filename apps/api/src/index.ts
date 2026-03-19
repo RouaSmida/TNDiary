@@ -13,6 +13,7 @@ import { csrfProtection } from './middleware/csrfProtection';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
+const HOST = process.env.HOST || (process.env.NODE_ENV === 'production' ? '127.0.0.1' : '0.0.0.0');
 
 if (process.env.NODE_ENV === 'production') {
   // Needed when running behind a reverse proxy/tunnel so secure cookies work correctly.
@@ -103,8 +104,8 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 TNDiary API listening on http://0.0.0.0:${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 TNDiary API listening on http://${HOST}:${PORT}`);
 });
 
 export default app;
