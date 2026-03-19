@@ -14,34 +14,47 @@ import { csrfProtection } from './middleware/csrfProtection';
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
+if (process.env.NODE_ENV === 'production') {
+  // Needed when running behind a reverse proxy/tunnel so secure cookies work correctly.
+  app.set('trust proxy', 1);
+
+  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 24) {
+    throw new Error('SESSION_SECRET must be set to a strong value in production');
+  }
+}
+
 // Body parsing
 app.use(express.json());
 
-// CORS – allow the web dev server with credentials
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (process.env.NODE_ENV === 'production') {
-        callback(null, true);
-        return;
-      }
+// CORS – strict by default. In production, only enable it when WEB_URL is set explicitly.
+if (process.env.NODE_ENV !== 'production') {
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
 
-      if (!origin) {
-        callback(null, true);
-        return;
-      }
+        const allowedOrigin = process.env.WEB_URL || 'http://localhost:5173';
+        if (origin === allowedOrigin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+          callback(null, true);
+          return;
+        }
 
-      const allowedOrigin = process.env.WEB_URL || 'http://localhost:5173';
-      if (origin === allowedOrigin || origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
-        callback(null, true);
-        return;
-      }
-
-      callback(new Error('Not allowed by CORS'));
-    },
-    credentials: true,
-  })
-);
+        callback(new Error('Not allowed by CORS'));
+      },
+      credentials: true,
+    })
+  );
+} else if (process.env.WEB_URL) {
+  app.use(
+    cors({
+      origin: process.env.WEB_URL,
+      credentials: true,
+    })
+  );
+}
 
 // Sessions backed by Postgres
 const PgSession = connectPgSimple(session);

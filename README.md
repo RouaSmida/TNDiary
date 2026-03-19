@@ -70,6 +70,61 @@ Open http://localhost:5173 in your browser.
 
 ---
 
+## Free Deployment (No Render, No Card) via Cloudflare Tunnel
+
+This option is free and secure for personal use.
+
+### Security notes
+
+- Public traffic uses HTTPS to Cloudflare.
+- Your app still runs only on your machine (`localhost`).
+- Sessions use secure, httpOnly cookies in production mode.
+- You should set a strong `SESSION_SECRET` in `apps/api/.env`.
+
+### 1. Prepare environment
+
+Set in `apps/api/.env`:
+
+```
+NODE_ENV=production
+SESSION_SECRET=replace_with_a_long_random_secret
+```
+
+### 2. Start database
+
+```bash
+docker compose up -d
+```
+
+### 3. Build + migrate + run API (serves frontend too)
+
+```bash
+npm run build
+npm run migrate
+npm run start
+```
+
+### 4. Install Cloudflare Tunnel client
+
+```bash
+winget install Cloudflare.cloudflared
+```
+
+### 5. Expose your app
+
+```bash
+cloudflared tunnel --url http://localhost:4000
+```
+
+Cloudflared will print a public `https://...trycloudflare.com` URL.
+
+### Important limitations
+
+- This is live only while your computer is on and the commands are running.
+- For always-on hosting without your PC, you need a cloud VM/service.
+
+---
+
 ## Folder Structure
 
 ```
