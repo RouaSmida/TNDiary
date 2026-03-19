@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: tndiary
+    runtime: node
+    rootDir: .
+    buildCommand: npm install; npm run build
+    startCommand: npm run migrate; npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tndiary-db
+          property: connectionString
+
+databases:
+  - name: tndiary-db
+    databaseName: tndiary
+    user: tndiary
