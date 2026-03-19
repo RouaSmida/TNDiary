@@ -1,0 +1,17 @@
+{
+  "name": "tndiary",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=apps/api\" \"npm run dev --workspace=apps/web\"",
+    "migrate": "npm run migrate --workspace=apps/api",
+    "db:up": "docker compose up -d postgres",
+    "setup": "docker compose up -d && npm install && npm run migrate"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

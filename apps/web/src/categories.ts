@@ -1,0 +1,62 @@
+/** Canonical categories – must match apps/api/src/categories.ts */
+export const CATEGORIES: Record<string, string[]> = {
+  groceries: ['food_supplies', 'snacks', 'hygiene', 'cleaning'],
+  bills: ['electricity', 'water', 'internet', 'subscriptions'],
+  transport: ['public_transport', 'taxi'],
+  health: ['pharmacy', 'doctor'],
+  eating_out: ['restaurant', 'coffeeshop', 'fast_food', 'desserts'],
+  shopping: ['clothes', 'shoes', 'accessories', 'makeup'],
+  entertainment: ['cinema', 'events', 'fun_activities'],
+  savings: ['emergency_fund', 'short_term_goal', 'long_term_goal'],
+  family_friends: ['parents', 'siblings', 'partner', 'friends'],
+  other: ['other'],
+};
+
+export const CATEGORY_KEYS = Object.keys(CATEGORIES);
+
+export const CATEGORY_LABELS: Record<string, string> = {
+  groceries: '🛒 Groceries',
+  bills: '💡 Bills',
+  transport: '🚌 Transport',
+  health: '💊 Health',
+  eating_out: '🍽️ Eating Out',
+  shopping: '🛍️ Shopping',
+  entertainment: '🎬 Entertainment',
+  savings: '💰 Savings',
+  family_friends: '👨‍👩‍👧 Family & Friends',
+  other: '📦 Other',
+};
+
+export const SUBCATEGORY_LABELS: Record<string, string> = {
+  food_supplies: 'Food Supplies',
+  snacks: 'Snacks',
+  hygiene: 'Hygiene',
+  cleaning: 'Cleaning',
+  electricity: 'Electricity',
+  water: 'Water',
+  internet: 'Internet',
+  subscriptions: 'Subscriptions',
+  public_transport: 'Public Transport',
+  taxi: 'Taxi',
+  pharmacy: 'Pharmacy',
+  doctor: 'Doctor',
+  restaurant: 'Restaurant',
+  coffeeshop: 'Coffee Shop',
+  fast_food: 'Fast Food',
+  desserts: 'Desserts',
+  clothes: 'Clothes',
+  shoes: 'Shoes',
+  accessories: 'Accessories',
+  makeup: 'Makeup',
+  cinema: 'Cinema',
+  events: 'Events',
+  fun_activities: 'Fun Activities',
+  emergency_fund: 'Emergency Fund',
+  short_term_goal: 'Short-term Goal',
+  long_term_goal: 'Long-term Goal',
+  parents: 'Parents',
+  siblings: 'Siblings',
+  partner: 'Partner',
+  friends: 'Friends',
+  other: 'Other',
+};

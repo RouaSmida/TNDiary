@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+*/node_modules/
+apps/*/node_modules/
+
+# Build outputs
+dist/
+apps/*/dist/
+
+# Environment files (never commit real secrets)
+.env
+apps/**/.env
+
+# OS / editor
+.DS_Store
+.vscode/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
